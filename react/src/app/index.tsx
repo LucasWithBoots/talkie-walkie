@@ -1,4 +1,4 @@
-import { Alert, Text, View } from "react-native";
+import { View } from "react-native";
 import ButtonRecord from "../components/button-record";
 import { useEffect, useState } from "react";
 import { Audio } from "expo-av";
