@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Pressable, Text, TouchableOpacity, View, Image } from "react-native";
+import { useState } from "react";
+import { Pressable, View, Image } from "react-native";
 
 export default function ButtonRecord({
     buttonState,
