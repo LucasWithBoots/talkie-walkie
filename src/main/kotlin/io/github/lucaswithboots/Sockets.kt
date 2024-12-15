@@ -5,6 +5,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import java.io.File
 import java.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -27,5 +28,21 @@ fun Application.configureSockets() {
                 }
             }
         }
+
+        webSocket("/audio") {
+            for (frame in incoming) {
+                if (frame is Frame.Binary) {
+                   val audio = frame.readBytes()
+                    saveAudioToFile(audio)
+                    outgoing.send(Frame.Text("Audio saved, size: ${audio.size}"))
+                }
+            }
+        }
     }
+}
+
+fun saveAudioToFile(data: ByteArray) {
+    val file = File("received_audio_${System.currentTimeMillis()}.wav")
+    file.writeBytes(data)
+    println("Áudio salvo em: ${file.absolutePath}")
 }
