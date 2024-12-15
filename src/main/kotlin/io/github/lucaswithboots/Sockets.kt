@@ -7,6 +7,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import java.io.File
 import java.time.Duration
+import kotlin.io.encoding.Base64
 import kotlin.time.Duration.Companion.seconds
 
 fun Application.configureSockets() {
@@ -31,10 +32,11 @@ fun Application.configureSockets() {
 
         webSocket("/audio") {
             for (frame in incoming) {
-                if (frame is Frame.Binary) {
-                   val audio = frame.readBytes()
-                    saveAudioToFile(audio)
-                    outgoing.send(Frame.Text("Audio saved, size: ${audio.size}"))
+                if (frame is Frame.Text) {
+                   val audioBase64 = frame.readText()
+                    val audioBytes = java.util.Base64.getDecoder().decode(audioBase64)
+                    saveAudioToFile(audioBytes)
+                    outgoing.send(Frame.Text("Audio saved, size: ${audioBytes.size}"))
                 }
             }
         }
