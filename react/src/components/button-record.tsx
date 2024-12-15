@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View, Image } from "react-native";
 
 export default function ButtonRecord({
     buttonState,
@@ -17,9 +17,11 @@ export default function ButtonRecord({
         <View>
             <Pressable
                 onPress={handlePress}
-                className="bg-white w-64 h-64 rounded-lg z-10"
+                className="bg-white w-64 h-64 rounded-lg z-10 justify-center items-center"
                 style={{ bottom: pressed ? -20 : 0 }}
-            ></Pressable>
+            >
+                <Image source={require("@/assets/images/mic.png")} />
+            </Pressable>
             <View
                 style={{ bottom: -20 }}
                 className="bg-slate-400 w-64 h-20 rounded-lg absolute z-0"

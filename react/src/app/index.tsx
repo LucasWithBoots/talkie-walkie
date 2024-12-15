@@ -16,6 +16,12 @@ export default function Index() {
     const [sound, setSound] = useState<Audio.Sound | null>(null);
     const [audioUri, setAudioUri] = useState<string | null>("");
 
+    const ws = new WebSocket("ws://192.168.18.122:8080/audio");
+
+    ws.onerror = (e) => {
+        console.log(e);
+    };
+
     async function startRecording() {
         try {
             // Solicitar permissão
@@ -58,18 +64,7 @@ export default function Index() {
                     encoding: FileSystem.EncodingType.Base64,
                 });
 
-                const ws = new WebSocket("ws://192.168.18.122:8080/audio");
-
-                ws.onopen = () => {
-                    // connection opened
-                    ws.send(audioBase64);
-                    ws.close();
-                };
-
-                ws.onerror = (e) => {
-                    // an error occurred
-                    console.log(e);
-                };
+                ws.send(audioBase64);
             }
         } catch (error) {
             console.error("Erro ao parar gravação:", error);

@@ -24,11 +24,7 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
     implementation(libs.ktor.server.config.yaml)
-
-    // Client files
-    implementation("io.ktor:ktor-client-websockets:$3.0.2")
-    implementation("io.ktor:ktor-client-core:3.0.2")
-    implementation("io.ktor:ktor-client-cio:3.0.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.2")
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 }
