@@ -4,7 +4,10 @@ import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import java.util.*
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 fun Application.configureSockets() {
@@ -15,18 +18,23 @@ fun Application.configureSockets() {
         masking = false
     }
 
-    val sessions = mutableMapOf<String, DefaultWebSocketSession>()
+    val messageResponseFlow = MutableSharedFlow<String>()
+    val sharedFlow = messageResponseFlow.asSharedFlow()
 
     routing {
         webSocket("/audio") {
-            val clientId = "client-${UUID.randomUUID()}"
-            sessions[clientId] = this
+            val job = launch {
+                sharedFlow.collect { message ->
+                    send(message)
+                }
+            }
 
-            for (frame in incoming) {
-                if (frame is Frame.Text) {
-                    println("Recebido de $clientId")
-                    val audioBase64 = frame.readText()
-                    send(audioBase64)
+            runCatching {
+                incoming.consumeEach { frame ->
+                    if (frame is Frame.Text) {
+                        val audioBase64 = frame.readText()
+                        messageResponseFlow.emit(audioBase64)
+                    }
                 }
             }
         }
