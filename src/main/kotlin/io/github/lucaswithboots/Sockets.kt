@@ -35,6 +35,8 @@ fun Application.configureSockets() {
                         val audioBase64 = frame.readText()
                         messageResponseFlow.emit(audioBase64)
                     }
+                }.also {
+                    job.cancel()
                 }
             }
         }

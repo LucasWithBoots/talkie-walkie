@@ -17,7 +17,7 @@ export default function Index() {
 
     const [recording, setRecording] = useState<Recording | null>(null);
 
-    const ws = new WebSocket("ws://192.168.18.122:8080/audio");
+    const ws = new WebSocket("ws://192.168.15.232:8080/audio");
 
     ws.onopen = () => {
         setStatusServer("Online");
